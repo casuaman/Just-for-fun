@@ -1,0 +1,98 @@
+//模拟小球在矩形中的跳动
+//1、碰到墙壁速度下降
+//2、具有重力
+//3、起始位置和速度随机
+#include <conio.h>//要用到_kbhit()函数
+#include <time.h>//要用到随机数
+#include <graphics.h>//需要下载EasyX
+int get_randx();//实现任意位置出现
+int get_randy();
+int get_kx();//为实验效果，速度取值范围为11到49，下同
+int get_ky();
+int main()
+{
+	initgraph(900, 900);
+	setbkcolor(RGB(233, 116, 119));//晚霞与落日配色
+	cleardevice();
+	int x = get_randx();
+	int y = get_randy();
+	int kx = get_kx();
+	int ky = get_ky();
+	int x1;
+	int y1;
+	while (!(_kbhit() && _getch() == 27))//按Esc退出
+	{
+		x1 = x;
+		y1 = y;
+		//四个边界检测，若达到边界，进行回弹并速度减一
+		if ((x + kx + 50) >= 900)
+		{
+			if (kx != 0)
+			{
+				kx = -(kx - 1);
+				x = x1;
+			}
+		}
+		else if ((x + kx - 50) <= 0)
+		{
+			if (kx != 0) {
+				kx = -(kx + 1);
+				x = x1;
+			}
+		}
+		if (y + ky + 50 >= 900)
+		{
+			if (ky != 0) {
+				ky = -(ky - 1);
+				y = y1;
+			}
+		}
+		else if ((y + ky - 50) <= 0)
+		{
+			ky = -(ky + 1);
+			y = y1;
+		}
+		else
+			ky++;
+		//图像刷新
+		setcolor(RGB(233, 116, 119));
+		setfillcolor(RGB(233, 116, 119));
+		fillcircle(x1, y1, 50);
+		x += kx;
+		y += ky;
+		setcolor(RGB(227, 212, 94));
+		setfillcolor(RGB(227, 212, 94));
+		fillcircle(x, y, 50);
+		Sleep(20);//帧率：50赫兹
+	}
+	closegraph();
+	return 0;
+}
+
+int get_randx()
+{
+	srand((unsigned)time(NULL) * (unsigned)rand());
+	return rand() % (900 - 50);
+}
+int get_randy()
+{
+	srand((unsigned)time(NULL) + (unsigned)rand());
+	return rand() % (900 - 50);
+}
+int get_kx()
+{
+	srand((unsigned)time(NULL) + (unsigned)rand());
+	int k = rand() % 50;	
+	while (k <= 10)
+		k = rand() % 50;
+	return k;
+}
+
+int get_ky()
+{
+	srand((unsigned)time(NULL) + (unsigned)rand());
+	int k = rand() % 50;
+	while (k <= 10)
+		k = rand() % 50;
+	return k;
+}
